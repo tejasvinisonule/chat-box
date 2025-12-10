@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="chat.css">
+</head>
+
+<body>
+    <h2>Chat-Box</h2>
+    <div class="box">   
+        
+        <div class="sty"> 
+            <form action="">
+                <input type="name1" id="user1" placeholder="User 1"><br><br>
+                <input type="text" id="msg1" placeholder="Message1">
+                
+                <button  id="btn1" onclick="message1">Send Message</button> 
+                <div id="us1">
+                    
+                </div>
+            </form>
+        </div>
+          <hr>
+        <div class="sty">  
+            <form action="">
+                <input type="name2" id="user2" placeholder="User 2"><br><br>
+                <input type="text" id="msg2" placeholder="Message2"><br><br>
+                <button id="btn2" onclick="message2">Send Message</button><br><br>
+                <div id="us2">
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        const socket = io();
+
+        function message1(){
+            const user = document.getElementById("name1").value;
+            const msg = document.getElementById("msg1").value;
+
+            if(user && msg){
+                socket.emit("chatMessage", { user, msg });
+                document.getElementById("msg1").value = "";
+            }
+        }
+
+        function message2(){
+            const user = document.getElementById("name2").value;
+            const msg = document.getElementById("msg2").value;
+
+            if(user && msg){
+                socket.emit("chatMessage", { user, msg });
+                document.getElementById("msg2").value = "";
+            }
+        }
+
+        socket.on("chatMessage", (data)=>{
+            let m1 = document.getElementById("us1");
+            let m2 = document.getElementById("us2");
+
+            m1.innerHTML += <p><span class="user1">${data.user}:</span> ${data.msg}</p>;
+            m2.innerHTML += <p><span class="user2">${data.user}:</span> ${data.msg}</p>;
+        });
+    </script>
+
+</body>
+</html>
